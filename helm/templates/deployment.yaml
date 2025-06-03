@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloth-mini-app
+spec:
+  replicas: {{ .Values.services.clothMiniApp.replicas }}
+  selector:
+    matchLabels:
+      app: cloth-mini-app
+  template:
+    metadata:
+      labels:
+        app: cloth-mini-app
+    spec:
+      containers:
+        - name: app
+          image: cloth-mini-app
+          ports:
+            - containerPort: {{ .Values.services.clothMiniApp.ports.containerPort }}
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "8081"
+            - name: ENV
+              value: "dev"
+            - name: DBHOST
+              value: "mini-app-postgresql"
+            - name: USER
+              value: "admin"
+            - name: PASSWORD
+              value: "admin"
+            - name: DBNAME
+              value: "storage"
+            - name: DBPORT
+              value: "5432"
+            - name: MINIO_ENDPOINT
+              value: "mini-app-minio:9000"
+            - name: MINIO_BUCKET_NAME
+              value: "image-bucket"
+            - name: MINIO_ROOT_USER
+              value: "admin"
+            - name: MINIO_ROOT_PASSWORD
+              value: "minio123"
+            - name: KAFKA_BROKER
+              value: "localhost:9094"
+            - name: KAFKA_TOPIC
+              value: "notifications"
+      initContainers:
+        - name: migrations
+          image: mini-app-migrations
+          env:
+          - name: HOST
+            value: "0.0.0.0"
+          - name: PORT
+            value: "8081"
+          - name: ENV
+            value: "dev"
+          - name: DBHOST
+            value: "mini-app-postgresql"
+          - name: USER
+            value: "admin"
+          - name: PASSWORD
+            value: "admin"
+          - name: DBNAME
+            value: "storage"
+          - name: DBPORT
+            value: "5432"
+          - name: MINIO_ENDPOINT
+            value: "mini-app-minio:9000"
+          - name: MINIO_BUCKET_NAME
+            value: "image-bucket"
+          - name: MINIO_ROOT_USER
+            value: "admin"
+          - name: MINIO_ROOT_PASSWORD
+            value: "minio123"
+          - name: KAFKA_BROKER
+            value: "localhost:9094"
+          - name: KAFKA_TOPIC
+            value: "notifications"
+
+

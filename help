@@ -1,0 +1,13 @@
+# Ошибка container is waiting to start: can't be pulled
+#   bash:
+eval $(minikube docker-env)
+docker build -t cloth-mini-app:latest ./cloth-mini-app
+
+# pod с курлом
+kubectl run -it --rm --image=curlimages/curl curly -- /bin/sh
+
+# алиас добавление сервера
+ms alias set myminio http://mini-app-minio:9000 admin minio123
+
+# port forward
+kubectl port-forward svc/my-app-service 8081:80

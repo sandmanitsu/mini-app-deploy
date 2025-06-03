@@ -1,0 +1,20 @@
+apiVersion: v2
+name: mini-app
+description: A Helm chart for Kubernetes
+
+type: application
+version: 0.1.0
+appVersion: "1.16.0"
+
+dependencies:
+  - name: postgresql
+    version: "16.7.4"
+    repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
+    # condition: postgresql.enabled
+    # repository: "https://charts.bitnami.com/bitnami"
+  - name: minio
+    version: "16.0.10"
+    repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
+  - name: kafka
+    version: "32.2.12"
+    repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"

@@ -1,0 +1,20 @@
+apiVersion: skaffold/v1beta15
+kind: Config
+build:
+  artifacts:
+    - image: cloth-mini-app
+      context: ./../cloth-mini-app/
+      docker:
+        dockerfile: dockerfile
+    - image: mini-app-migrations
+      context: ./../cloth-mini-app/
+      docker:
+        dockerfile: dockerfile.migration.yaml
+  # local:
+    # push: true
+deploy:
+  helm:
+    releases:
+      - name: mini-app
+        chartPath: ./helm
+        valuesFiles: ["./helm/values.yaml"]

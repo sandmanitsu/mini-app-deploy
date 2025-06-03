@@ -1,0 +1,41 @@
+global:
+  env: "dev"
+  namespace: "mini-app"
+
+postgresql:
+  auth:
+    replicationPassword: admin
+    postgresPassword: admin ## main user
+    username: admin ## custom username
+    password: admin
+    database: storage
+  primary:
+    initdb:
+      scripts:
+        init-database.sh: |
+          #!/bin/bash
+          set -e
+
+          export PGPASSWORD="admin"
+
+          psql -v ON_ERROR_STOP=1 --username "postgres" --dbname "storage" <<-EOSQL
+              CREATE DATABASE users;
+              GRANT ALL PRIVILEGES ON DATABASE storage TO admin;
+              GRANT ALL PRIVILEGES ON DATABASE users TO admin;
+          EOSQL
+
+minio:
+  auth:
+    rootUser: "admin"
+    rootPassword: "minio123"
+
+services:
+  clothMiniApp:
+    enabled: true
+    replicas: 3
+    ports:
+      containerPort: 8080
+      servicePort: 80
+
+ingress:
+  enabled: false
