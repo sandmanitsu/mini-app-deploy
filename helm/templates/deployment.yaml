@@ -43,7 +43,7 @@ spec:
             - name: MINIO_ROOT_PASSWORD
               value: "minio123"
             - name: KAFKA_BROKER
-              value: "localhost:9094"
+              value: "mini-app-kafka:9092"
             - name: KAFKA_TOPIC
               value: "notifications"
       initContainers:
@@ -75,7 +75,7 @@ spec:
           - name: MINIO_ROOT_PASSWORD
             value: "minio123"
           - name: KAFKA_BROKER
-            value: "localhost:9094"
+            value: "mini-app-kafka:9092"
           - name: KAFKA_TOPIC
             value: "notifications"
 

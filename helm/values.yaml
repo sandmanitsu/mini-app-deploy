@@ -29,6 +29,21 @@ minio:
     rootUser: "admin"
     rootPassword: "minio123"
 
+kafka:
+  listeners:
+    client:
+      protocol: "PLAINTEXT"
+    controller:
+      protocol: "PLAINTEXT"
+    external:
+      protocol: "PLAINTEXT"
+  securityProtocolMap: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT"
+  controller:
+    replicaCount: 1
+    quorumVoters: "0@kafka-0.kafka-headless.default.svc.cluster.local:9093"
+  broker:
+    replicaCount: 1
+
 services:
   clothMiniApp:
     enabled: true
