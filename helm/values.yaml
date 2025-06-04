@@ -20,6 +20,9 @@ postgresql:
 
           psql -v ON_ERROR_STOP=1 --username "postgres" --dbname "storage" <<-EOSQL
               CREATE DATABASE users;
+              GRANT USAGE ON SCHEMA public TO admin;
+              GRANT CREATE ON SCHEMA public TO admin;
+              GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO admin;
               GRANT ALL PRIVILEGES ON DATABASE storage TO admin;
               GRANT ALL PRIVILEGES ON DATABASE users TO admin;
           EOSQL
@@ -30,6 +33,8 @@ minio:
     rootPassword: "minio123"
 
 kafka:
+  zookeeper:
+    enabled: false
   listeners:
     client:
       protocol: "PLAINTEXT"
@@ -51,6 +56,17 @@ services:
     ports:
       containerPort: 8080
       servicePort: 80
+  telegram:
+    enebled: true
+    replicas: 1
+    ports:
+      containerPort: 443
+      servicePort: 443
+  notifications:
+    enebled: true
+    replicas: 2
+    ports:
+      containerPort: 8084
 
 ingress:
   enabled: false

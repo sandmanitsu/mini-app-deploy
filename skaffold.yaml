@@ -10,6 +10,18 @@ build:
       context: ./../cloth-mini-app/
       docker:
         dockerfile: dockerfile.migration.yaml
+    - image: mini-app-telegram
+      context: ./../mini-app-telegram/
+      docker:
+        dockerfile: dockerfile
+    - image: mini-app-telegram-migrations
+      context: ./../mini-app-telegram/
+      docker:
+        dockerfile: dockerfile.migration.yaml
+    - image: mini-app-notifications
+      context: ./../mini-app-notification/
+      docker:
+        dockerfile: dockerfile
   # local:
     # push: true
 deploy:

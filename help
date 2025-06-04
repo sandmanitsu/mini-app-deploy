@@ -11,3 +11,16 @@ ms alias set myminio http://mini-app-minio:9000 admin minio123
 
 # port forward
 kubectl port-forward svc/my-app-service 8081:80
+
+
+#todo Чтобы заработало все
+# поменять владельца
+ALTER DATABASE users OWNER TO admin;
+
+# добавить топик в брокере
+kafka-topics.sh --create \
+  --bootstrap-server localhost:9092 \
+  --topic __consumer_offsets \
+  --partitions 50 \
+  --replication-factor 1 \
+  --config cleanup.policy=compact

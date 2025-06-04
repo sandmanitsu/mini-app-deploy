@@ -16,5 +16,5 @@ dependencies:
     version: "16.0.10"
     repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
   - name: kafka
-    version: "32.2.12"
+    version: "31.5.0"
     repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"

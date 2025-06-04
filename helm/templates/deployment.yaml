@@ -79,4 +79,108 @@ spec:
           - name: KAFKA_TOPIC
             value: "notifications"
 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-app-telegram
+spec:
+  replicas: {{ .Values.services.telegram.replicas }}
+  selector:
+    matchLabels:
+      app: mini-app-telegram
+  template:
+    metadata:
+      labels:
+        app: mini-app-telegram
+    spec:
+      containers:
+        - name: tg-app
+          image: mini-app-telegram
+          ports:
+            - containerPort: {{ .Values.services.telegram.ports.containerPort }}
+          env:
+            - name: BOT_TOKEN
+              value: "7485405551:AAG6HJ_uhYH90FSAOiWHmHm2dSvnZFsFc1g"
+            - name: ENV
+              value: "dev"
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "443"
+            - name: DBHOST
+              value: "mini-app-postgresql"
+            - name: USER
+              value: "admin"
+            - name: PASSWORD
+              value: "admin"
+            - name: DBNAME
+              value: "users"
+            - name: DBPORT
+              value: "5432"
+      initContainers:
+        - name: tg-migrations
+          image: mini-app-telegram-migrations
+          env:
+            - name: BOT_TOKEN
+              value: "7485405551:AAG6HJ_uhYH90FSAOiWHmHm2dSvnZFsFc1g"
+            - name: ENV
+              value: "dev"
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "443"
+            - name: DBHOST
+              value: "mini-app-postgresql"
+            - name: USER
+              value: "admin"
+            - name: PASSWORD
+              value: "admin"
+            - name: DBNAME
+              value: "users"
+            - name: DBPORT
+              value: "5432"
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-app-notifications
+spec:
+  replicas: {{ .Values.services.notifications.replicas }}
+  selector:
+    matchLabels:
+      app: mini-app-notifications
+  template:
+    metadata:
+      labels:
+        app: mini-app-notifications
+    spec:
+      containers:
+        - name: notifications
+          image: mini-app-notifications
+          ports:
+            - containerPort: {{ .Values.services.notifications.ports.containerPort }}
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "8000"
+            - name: ENV
+              value: "dev"
+            - name: KAFKA_BROKER
+              value: "mini-app-kafka:9092"
+            - name: KAFKA_TOPIC
+              value: "notifications"
+            - name: BOT_TOKEN
+              value: "7485405551:AAG6HJ_uhYH90FSAOiWHmHm2dSvnZFsFc1g"
+            - name: DBHOST
+              value: "mini-app-postgresql"
+            - name: USER
+              value: "admin"
+            - name: PASSWORD
+              value: "admin"
+            - name: DBNAME
+              value: "users"
+            - name: DBPORT
+              value: "5432"
+
 
