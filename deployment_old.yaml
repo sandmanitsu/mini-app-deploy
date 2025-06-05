@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.apps.clothMiniApp.metadata.name }}
+  name: cloth-mini-app
 spec:
   replicas: {{ .Values.apps.clothMiniApp.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.apps.clothMiniApp.selector.app }}
+      app: cloth-mini-app
   template:
     metadata:
       labels:
-        app: {{ .Values.apps.clothMiniApp.template.labelApp }}
+        app: cloth-mini-app
     spec:
       containers:
-        - name: {{ .Values.apps.clothMiniApp.containerName }}
-          image: {{ .Values.apps.clothMiniApp.image }}
+        - name: app
+          image: cloth-mini-app
           ports:
             - containerPort: {{ .Values.apps.clothMiniApp.ports.containerPort }}
           {{- if and (.Values.apps.clothMiniApp.env) (kindIs "slice" .Values.apps.clothMiniApp.env) }}
@@ -26,10 +26,9 @@ spec:
               {{- end }}
             {{- end }}
           {{- end }}
-      {{- if and (.Values.apps.clothMiniApp.initContainer) (.Values.apps.clothMiniApp.initContainer.name) (.Values.apps.clothMiniApp.initContainer.image) }}
       initContainers:
-        - name: {{ .Values.apps.clothMiniApp.initContainer.name }}
-          image: {{ .Values.apps.clothMiniApp.initContainer.image }}
+        - name: migrations
+          image: mini-app-migrations
           {{- if and (.Values.apps.clothMiniApp.env) (kindIs "slice" .Values.apps.clothMiniApp.env) }}
           env:
             {{- range .Values.apps.clothMiniApp.env }}
@@ -39,25 +38,24 @@ spec:
               {{- end }}
             {{- end }}
           {{- end }}
-      {{- end}}
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.apps.telegram.metadata.name }}
+  name: mini-app-telegram
 spec:
   replicas: {{ .Values.apps.telegram.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.apps.telegram.selector.app }}
+      app: mini-app-telegram
   template:
     metadata:
       labels:
-        app: {{ .Values.apps.telegram.template.labelApp }}
+        app: mini-app-telegram
     spec:
       containers:
-        - name: {{ .Values.apps.telegram.containerName }}
-          image: {{ .Values.apps.telegram.image }}
+        - name: tg-app
+          image: mini-app-telegram
           ports:
             - containerPort: {{ .Values.apps.telegram.ports.containerPort }}
           {{- if and (.Values.apps.telegram.env) (kindIs "slice" .Values.apps.telegram.env) }}
@@ -69,10 +67,9 @@ spec:
               {{- end }}
             {{- end }}
           {{- end }}
-      {{- if and (.Values.apps.telegram.initContainer) (.Values.apps.telegram.initContainer.name) (.Values.apps.telegram.initContainer.image) }}
       initContainers:
-        - name: {{ .Values.apps.telegram.initContainer.name }}
-          image: {{ .Values.apps.telegram.initContainer.image }}
+        - name: tg-migrations
+          image: mini-app-telegram-migrations
           {{- if and (.Values.apps.telegram.env) (kindIs "slice" .Values.apps.telegram.env) }}
           env:
             {{- range .Values.apps.telegram.env }}
@@ -82,35 +79,32 @@ spec:
               {{- end }}
             {{- end }}
           {{- end }}
-      {{- end}}
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.apps.notifications.metadata.name }}
+  name: mini-app-notifications
 spec:
   replicas: {{ .Values.apps.notifications.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.apps.notifications.selector.app }}
+      app: mini-app-notifications
   template:
     metadata:
       labels:
-        app: {{ .Values.apps.notifications.template.labelApp }}
+        app: mini-app-notifications
     spec:
       containers:
-        - name: {{ .Values.apps.notifications.containerName }}
-          image: {{ .Values.apps.notifications.image }}
+        - name: notifications
+          image: mini-app-notifications
           ports:
             - containerPort: {{ .Values.apps.notifications.ports.containerPort }}
-          {{- if and (.Values.apps.notifications.env) (kindIs "slice" .Values.apps.notifications.env) }}
+          {{- if and (.Values.apps.telegram.env) (kindIs "slice" .Values.apps.telegram.env) }}
           env:
-            {{- range .Values.apps.notifications.env }}
+            {{- range .Values.apps.telegram.env }}
               {{- if and .name .value }}
                 - name: {{ .name }}
                   value: {{ .value | quote }}
               {{- end }}
             {{- end }}
           {{- end }}
-
-

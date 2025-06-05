@@ -49,24 +49,124 @@ kafka:
   broker:
     replicaCount: 1
 
-services:
+apps:
   clothMiniApp:
     enabled: true
     replicas: 3
+    metadata:
+      name: "cloth-mini-app"
+    selector:
+      app: "cloth-mini-app"
+    template:
+      labelApp: "cloth-mini-app"
     ports:
       containerPort: 8080
       servicePort: 80
+    containerName: "app"
+    image: "cloth-mini-app"
+    initContainer:
+      name: "migrations"
+      image: "mini-app-migrations"
+    env:
+      - name: HOST
+        value: "0.0.0.0"
+      - name: PORT
+        value: "8081"
+      - name: ENV
+        value: "dev"
+      - name: DBHOST
+        value: "mini-app-postgresql"
+      - name: USER
+        value: "admin"
+      - name: PASSWORD
+        value: "admin"
+      - name: DBNAME
+        value: "storage"
+      - name: DBPORT
+        value: "5432"
+      - name: MINIO_ENDPOINT
+        value: "mini-app-minio:9000"
+      - name: MINIO_BUCKET_NAME
+        value: "image-bucket"
+      - name: MINIO_ROOT_USER
+        value: "admin"
+      - name: MINIO_ROOT_PASSWORD
+        value: "minio123"
+      - name: KAFKA_BROKER
+        value: "mini-app-kafka:9092"
+      - name: KAFKA_TOPIC
+        value: "notifications"
   telegram:
-    enebled: true
+    enabled: true
+    metadata:
+      name: "mini-app-telegram"
+    selector:
+      app: "mini-app-telegram"
+    template:
+      labelApp: "mini-app-telegram"
+    containerName: "app"
+    image: "mini-app-telegram"
+    initContainer:
+      name: "migrations"
+      image: "mini-app-telegram-migrations"
     replicas: 1
     ports:
       containerPort: 443
-      servicePort: 443
+    env:
+      - name: BOT_TOKEN
+        value: "7485405551:AAG6HJ_uhYH90FSAOiWHmHm2dSvnZFsFc1g"
+      - name: ENV
+        value: "dev"
+      - name: HOST
+        value: "0.0.0.0"
+      - name: PORT
+        value: "443"
+      - name: DBHOST
+        value: "mini-app-postgresql"
+      - name: USER
+        value: "admin"
+      - name: PASSWORD
+        value: "admin"
+      - name: DBNAME
+        value: "users"
+      - name: DBPORT
+        value: "5432"
   notifications:
-    enebled: true
-    replicas: 2
+    enabled: true
+    metadata:
+      name: "mini-app-notifications"
+    selector:
+      app: "mini-app-notifications"
+    template:
+      labelApp: "mini-app-notifications"
+    containerName: "app"
+    image: "mini-app-notifications"
+    replicas: 1
     ports:
       containerPort: 8084
+    env:
+      - name: HOST
+        value: "0.0.0.0"
+      - name: PORT
+        value: "8000"
+      - name: ENV
+        value: "dev"
+      - name: KAFKA_BROKER
+        value: "mini-app-kafka:9092"
+      - name: KAFKA_TOPIC
+        value: "notifications"
+      - name: BOT_TOKEN
+        value: "7485405551:AAG6HJ_uhYH90FSAOiWHmHm2dSvnZFsFc1g"
+      - name: DBHOST
+        value: "mini-app-postgresql"
+      - name: USER
+        value: "admin"
+      - name: PASSWORD
+        value: "admin"
+      - name: DBNAME
+        value: "users"
+      - name: DBPORT
+        value: "5432"
 
 ingress:
   enabled: false
